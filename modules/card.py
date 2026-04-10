@@ -23,8 +23,9 @@ class Values(Enum):
 
 class Card:
     def __init__(self, suit:Suits, value:Values):
-        self.suit = suit.name
-        self.value = value
+        self.__suit = suit.name
+        self.__value = value
+        self.value = value.value
         
     def __str__(self):
-        return f"{self.value.name} of {self.suit}"
+        return f"{self.__value.name} of {self.__suit}"
