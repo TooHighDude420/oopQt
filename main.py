@@ -1,7 +1,14 @@
+# main imports
 from enum import Enum, auto
 from modules.dealer import Dealer
 from modules.player import Player
 from modules.deck import Deck
+from modules.main_window import mainWindow
+
+# debug imports
+import datetime
+
+# ui widgets
 
 class gamestate(Enum):
     GAME_START = 0
@@ -19,11 +26,15 @@ players = {
     "player three": Player()
     }
 
+main_window = mainWindow()
+
 current_gamestate = gamestate.GAME_START
 
+# will be added to game window later
 while (running):
     match current_gamestate:
         case gamestate.GAME_START:
+            print(f"[DEBUG][{datetime.datetime.now()}] showing main menu")
             deck.shuffle_deck()
             for i in range(2):
                 for name, instance in players.items():
