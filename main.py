@@ -1,4 +1,53 @@
+from enum import Enum, auto
+from modules.dealer import Dealer
+from modules.player import Player
 from modules.deck import Deck
 
+class gamestate(Enum):
+    GAME_START = 0
+    MAIN_LOOP = auto()
+    GAME_END = auto()
+
+dealer = Dealer()
 deck = Deck()
-deck.shuffle_deck()
+running = True
+
+players = {
+    "dealer": dealer,
+    "player one": Player(),
+    "player two": Player(),
+    "player three": Player()
+    }
+
+current_gamestate = gamestate.GAME_START
+
+while (running):
+    match current_gamestate:
+        case gamestate.GAME_START:
+            deck.shuffle_deck()
+            for i in range(2):
+                for name, instance in players.items():
+                    instance.hit(dealer.deal(deck))
+            
+            current_gamestate = gamestate.MAIN_LOOP
+            
+        case gamestate.MAIN_LOOP:
+            for name, instance in players.items():
+                    if instance.hand.can_play:
+                        print(f"{name}'s turn\n\n")
+                        print(f"Total: {instance.hand.total}\n\n")
+                        print("1. hit")
+                        print("2. fold\n")
+
+                        choise = input(f"choose a action {name}:\n")
+
+                        match int(choise):
+                            case 1:
+                                instance.hit(deck.hit())
+                            case 2:
+                                instance.stand()
+                            case _:
+                                print(f"choise not valid")
+                    else:
+                        print(f"{name} is bust or passed")
+
