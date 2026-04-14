@@ -1,28 +1,28 @@
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QLabel, QApplication, QPushButton, QWidget, QVBoxLayout, QStackedWidget
 
-from widgets.main_menu import mainMenu
+from widgets.main_menu import MainMenu
 
-class mainWindow():
+class MainWindow():
     def __init__(self):
         self.app = QApplication([])
         self.screen = self.app.primaryScreen()
 
-        SCREEN_HEIGHT = self.screen.size().height()
-        SCREEN_WIDTH = self.screen.size().width()
+        self.screen_height = self.screen.size().height()
+        self.screen_width = self.screen.size().width()
 
         self.stack = QStackedWidget()
 
         self.window = QWidget()
-        self.window.setMaximumHeight(SCREEN_HEIGHT)
-        self.window.setMaximumWidth(SCREEN_WIDTH)
+        self.window.setMaximumHeight(self.screen_height)
+        self.window.setMaximumWidth(self.screen_width)
         self.window.showMaximized()
         self.window.setWindowTitle("Blackjack dealer training")
 
         self.layout = QVBoxLayout(self.window)
         self.layout.addWidget(self.stack)
 
-        self.show_widget(mainMenu())
+        self.show_widget(MainMenu(self))
 
         self.window.show()
 
@@ -31,3 +31,6 @@ class mainWindow():
     def show_widget(self, widget: QWidget):
         self.stack.addWidget(widget)
         self.stack.setCurrentWidget(widget)
+
+    def remove_widget(self, widget: QWidget):
+        self.stack.removeWidget(widget)

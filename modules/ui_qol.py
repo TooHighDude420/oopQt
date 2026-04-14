@@ -1,14 +1,13 @@
 from PyQt6.QtWidgets import QPushButton, QLayout
 from collections.abc import Callable
+from pathlib import Path
 
+BASE_DIR = Path(__file__).parent.parent
 
 def register_button(layout: QLayout, text:str, function: Callable, qss_name:str | None = None, **kwargs):
     tmpbutton = QPushButton(f"{text}")
     
-    # if function an kwargs passed use lamda to pass function with kwargs
-    # lambda is the same as javascript:
-    # () => ({})?
-    # (i think)
+    # iuse lambda to pass function with unpacked keyword arguments
     if function and len(kwargs) > 0:
         tmpbutton.clicked.connect(lambda: function(**kwargs))
     elif function:
@@ -17,4 +16,7 @@ def register_button(layout: QLayout, text:str, function: Callable, qss_name:str 
     if qss_name:
         tmpbutton.setObjectName(f"{qss_name}")
         
-    layout.addWidget(tmpbutton)  
+    layout.addWidget(tmpbutton)
+
+def load_style(filepath: str) -> str:
+    return open(BASE_DIR / filepath).read()

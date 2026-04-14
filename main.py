@@ -3,7 +3,7 @@ from enum import Enum, auto
 from modules.dealer import Dealer
 from modules.player import Player
 from modules.deck import Deck
-from modules.main_window import mainWindow
+from modules.main_window import MainWindow
 
 # debug imports
 import datetime
@@ -26,7 +26,7 @@ players = {
     "player three": Player()
     }
 
-main_window = mainWindow()
+main_window = MainWindow()
 
 current_gamestate = gamestate.GAME_START
 
