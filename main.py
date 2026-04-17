@@ -21,9 +21,9 @@ running = True
 
 players = {
     "dealer": dealer,
-    "player one": Player(),
-    "player two": Player(),
-    "player three": Player()
+    "player one": Player(1),
+    "player two": Player(1),
+    "player three": Player(1)
     }
 
 main_window = MainWindow()
