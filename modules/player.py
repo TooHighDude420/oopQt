@@ -11,8 +11,15 @@ class Player():
     def hit(self, card: Card) -> None:
         self.__hands[0].hit(card)
 
+        if self.__hands[0].total > 21:
+            self.allowed_play = False
+
     def stand(self) -> None:
         self.__hands[0].stand()
+        self.allowed_play = False
+
+    def get_total(self) -> int:
+        return self.__hands[0].total
 
     def place_bets(self, amount:int):
         return NotImplementedError("place_bet is not implemented")

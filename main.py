@@ -4,7 +4,9 @@ from modules.dealer import Dealer
 from modules.player import Player
 from modules.deck import Deck
 from modules.main_window import MainWindow
+from modules.gamelogger import GameLogger
 
+import sys
 # debug imports
 import datetime
 
@@ -26,9 +28,13 @@ players = {
     "player three": Player(1)
     }
 
-main_window = MainWindow()
-
+# main_window = MainWindow()
+game_logger = GameLogger(players)
 current_gamestate = gamestate.GAME_START
+
+temp_bust = {
+
+}
 
 # will be added to game window later
 while (running):
@@ -44,6 +50,10 @@ while (running):
             
         case gamestate.MAIN_LOOP:
             for name, instance in players.items():
+                print(f"[DEBUG][{datetime.datetime.now()}] sife of temp_bust {len(temp_bust)}")
+                print(f"[DEBUG][{datetime.datetime.now()}] temp_bust {temp_bust}")
+                
+                if isinstance(instance, Dealer):
                     if instance.hand.can_play:
                         print(f"{name}'s turn\n\n")
                         print(f"Total: {instance.hand.total}\n\n")
@@ -54,11 +64,43 @@ while (running):
 
                         match int(choise):
                             case 1:
-                                instance.hit(deck.hit())
+                                feedback = instance.hit(deck.hit())
+                                game_logger.log(name, "Hit", instance.hand.total, feedback)
                             case 2:
-                                instance.stand()
+                                feedback = instance.stand()
+                                game_logger.log(name, "Stand", instance.hand.total, feedback)
                             case _:
                                 print(f"choise not valid")
                     else:
-                        print(f"{name} is bust or passed")
+                        if name not in temp_bust:
+                            temp_bust[name] = "bust"
+                            game_logger.log(name, "is bust", instance.hand.total, None)
+                            print(f"{name} is bust or passed")
 
+                elif isinstance(instance, Player):
+                    print(f"{name}'s turn\n\n")
+                    print(f"Total: {instance.get_total()}\n\n")
+
+                    if instance.allowed_play:
+                        if not instance.get_total() > 19:
+                            print(f"{name} chooses hit")
+                            instance.hit(deck.hit())
+                            game_logger.log(name, "Hit", instance.get_total(), None)
+
+                        else:
+                            instance.stand()
+                            game_logger.log(name, "Stand", instance.get_total(), None)
+
+                    else:
+                        if name not in temp_bust:
+                            temp_bust[name] = "bust"
+                            game_logger.log(name, "is bust", instance.get_total(), None)
+                            print(f"{name} is bust or passed")
+
+            if len(temp_bust) > 3:
+                current_gamestate = gamestate.GAME_END
+        
+        case gamestate.GAME_END:
+            game_logger.write_log()
+            print("game end")
+            sys.exit()

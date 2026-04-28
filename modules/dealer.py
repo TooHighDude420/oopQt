@@ -6,15 +6,20 @@ class Dealer():
     def __init__(self):
         self.hand: Hand = Hand()
 
-    def hit(self, card: Card) -> None:
+    def hit(self, card: Card) -> str | None:
         if self.hand.total > 17:
-            print("wrong choise!\n if the dealer has 17 or higher he/she should stand")
-        
-        self.hand.hit(card)
-
+            return "wrong choise!\n if the dealer has 17 or higher they should stand"
+        else:
+            self.hand.hit(card)
+            return "Good choise"
+            
 
     def stand(self) -> None:
-        self.hand.stand()
+        if self.hand.total < 17:
+            return "wrong choise!\n if the dealer has 16 or lower they should stand"
+        else:
+            self.hand.stand()
+            return "Good choise"
 
     def deal(self, deck:Deck) -> Card:
         return deck.hit()
