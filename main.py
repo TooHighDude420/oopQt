@@ -7,6 +7,7 @@ from modules.main_window import MainWindow
 from modules.gamelogger import GameLogger
 
 import sys
+
 # debug imports
 import datetime
 
@@ -40,8 +41,8 @@ temp_bust = {
 while (running):
     match current_gamestate:
         case gamestate.GAME_START:
-            print(f"[DEBUG][{datetime.datetime.now()}] showing main menu")
             deck.shuffle_deck()
+
             for i in range(2):
                 for name, instance in players.items():
                     instance.hit(dealer.deal(deck))
@@ -50,9 +51,6 @@ while (running):
             
         case gamestate.MAIN_LOOP:
             for name, instance in players.items():
-                print(f"[DEBUG][{datetime.datetime.now()}] sife of temp_bust {len(temp_bust)}")
-                print(f"[DEBUG][{datetime.datetime.now()}] temp_bust {temp_bust}")
-                
                 if isinstance(instance, Dealer):
                     if instance.hand.can_play:
                         print(f"{name}'s turn\n\n")
