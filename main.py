@@ -65,16 +65,16 @@ while (running):
                         match int(choise):
                             case 1:
                                 feedback = instance.hit(deck.hit())
-                                game_logger.log(name, "Hit", instance.hand.total, feedback)
+                                game_logger.log(name, "Hit", instance.hand.total, feedback[0], feedback[1])
                             case 2:
                                 feedback = instance.stand()
-                                game_logger.log(name, "Stand", instance.hand.total, feedback)
+                                game_logger.log(name, "Stand", instance.hand.total, feedback[0], feedback[1])
                             case _:
                                 print(f"choise not valid")
                     else:
                         if name not in temp_bust:
                             temp_bust[name] = "bust"
-                            game_logger.log(name, "is bust", instance.hand.total, None)
+                            game_logger.log(name, "is bust", instance.hand.total)
                             print(f"{name} is bust or passed")
 
                 elif isinstance(instance, Player):
@@ -85,16 +85,16 @@ while (running):
                         if not instance.get_total() > 19:
                             print(f"{name} chooses hit")
                             instance.hit(deck.hit())
-                            game_logger.log(name, "Hit", instance.get_total(), None)
+                            game_logger.log(name, "Hit", instance.get_total())
 
                         else:
                             instance.stand()
-                            game_logger.log(name, "Stand", instance.get_total(), None)
+                            game_logger.log(name, "Stand", instance.get_total())
 
                     else:
                         if name not in temp_bust:
                             temp_bust[name] = "bust"
-                            game_logger.log(name, "is bust", instance.get_total(), None)
+                            game_logger.log(name, "is bust", instance.get_total())
                             print(f"{name} is bust or passed")
 
             if len(temp_bust) > 3:
@@ -102,5 +102,23 @@ while (running):
         
         case gamestate.GAME_END:
             game_logger.write_log()
-            print("game end")
+            evaluation = game_logger.evaluate_current_session()
+            
+            total_points = evaluation["dealer_points"]
+            
+            if total_points > 0:
+                good_bad = "Good job!"
+            else:
+                good_bad = "please try better next time"
+
+            print(f"you earned {total_points} points, {good_bad}")
+            
+            for action in evaluation["dealer_actions"]:
+                eval_item = "_____________\n"
+                
+                for key, val in action.items():
+                    eval_item += f"{key}:{val}\n"
+
+                print(eval_item)
+
             sys.exit()
