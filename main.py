@@ -22,7 +22,8 @@ table = Table(0, 3)
 console = Console(color_system='truecolor')
 
 # delay for clearing text
-CLEAR_DELAY = 2
+WRONG_DELAY = 4
+GOOD_DELAY = 1
 
 bust_list: list[str] = []
 save_guard = 0
@@ -34,11 +35,15 @@ while (running):
             # ask dealer to shuffle
             feedback = table.get_dealer().shuffle_deck(console, table.get_deck())
             console.print(f"{feedback[0]}, earned points: {feedback[1]}")
-            time.sleep(CLEAR_DELAY)
-            console.clear()
-
+            
             if feedback[1] > 0:
+                time.sleep(GOOD_DELAY)
+                console.clear()
                 table.set_gamestate(gamestate.ROUND_START)
+
+            else:
+                time.sleep(WRONG_DELAY)
+                console.clear()
         
         case gamestate.ROUND_START:
             dealer_coise = console.input("what to do next:\n\n1. Deal cards\n2. take bets\n")
@@ -46,7 +51,7 @@ while (running):
             if int(dealer_coise) == 2:
                 console.clear()
                 console.print(f"[green]Good choise![/green] earned points: 1")
-                time.sleep(CLEAR_DELAY)
+                time.sleep(GOOD_DELAY)
                 console.clear()
 
                 i = 0
@@ -60,7 +65,7 @@ while (running):
 
                     i += 1
 
-                time.sleep(CLEAR_DELAY)
+                time.sleep(WRONG_DELAY)
                 console.clear()
 
                 done = False
@@ -106,7 +111,7 @@ while (running):
                     if int(dealer_coise) == dealt_index:
                         console.clear()
                         console.print(f"[green]Good choise![/green] earned points: 1")
-                        time.sleep(CLEAR_DELAY)
+                        time.sleep(GOOD_DELAY)
                         console.clear()
 
                         if dealt_index == len(player_list) + 1:
@@ -125,10 +130,11 @@ while (running):
                         console.clear()
                         if dealt_index != len(player_list) + 1:
                             console.print(f"[red]Wrong choise![/red] you must deal the cards one by one in order {dealt_index} was the right choice, earned points: -1")
+                            time.sleep(WRONG_DELAY)
                         else:
                             console.print(f"[red]Wrong choise![/red] everyone gets 2 cards, earned points: -1")
+                            time.sleep(WRONG_DELAY)
 
-                        time.sleep(CLEAR_DELAY)
                         console.clear()
 
                 table.set_gamestate(gamestate.MAIN_LOOP)
@@ -136,7 +142,7 @@ while (running):
             elif int(dealer_coise) == 1:
                 console.clear()
                 console.print(f"[red]Wrong choise![/red] first take the bets then deals the cards, earned points: -1")
-                time.sleep(CLEAR_DELAY)
+                time.sleep(WRONG_DELAY)
                 console.clear()
 
         case gamestate.MAIN_LOOP:
@@ -164,7 +170,12 @@ while (running):
                             table.next_move(actions.STAND)
 
                         console.print(f"{feedback[0]}, earned points: {feedback[1]}")
-                        time.sleep(CLEAR_DELAY)
+                        
+                        if feedback[1] > 0:
+                            time.sleep(GOOD_DELAY)
+                        else:
+                            time.sleep(WRONG_DELAY)
+            
                         console.clear()
 
                     case 2:
@@ -181,7 +192,12 @@ while (running):
                                 table.next_player()
 
                         console.print(f"{feedback[0]}, earned points: {feedback[1]}")
-                        time.sleep(CLEAR_DELAY)
+                        
+                        if feedback[1] > 0:
+                            time.sleep(GOOD_DELAY)
+                        else:
+                            time.sleep(WRONG_DELAY)
+                        
                         console.clear()
             
             elif f"Player{playernum + 1}" not in bust_list:
@@ -203,7 +219,12 @@ while (running):
                         feedback = table.get_dealer().hit(table.get_dealer().deal(table.get_deck()))
                         console.clear()
                         console.print(f"{feedback[0]}, earned points {feedback[1]}")
-                        time.sleep(CLEAR_DELAY)
+                        
+                        if feedback[1] > 0:
+                            time.sleep(GOOD_DELAY)
+                        else:
+                            time.sleep(WRONG_DELAY)
+
                         console.clear()
 
                     
@@ -211,14 +232,18 @@ while (running):
                         feedback = table.get_dealer().stand()
                         console.clear()
                         console.print(f"{feedback[0]}, earned points {feedback[1]}")
-                        time.sleep(CLEAR_DELAY)
+                        if feedback[1] > 0:
+                            time.sleep(GOOD_DELAY)
+                        else:
+                            time.sleep(WRONG_DELAY)
+
                         console.clear()
 
             totals = {}
             
             for i in range(table.get_player_count()):
                 player, playernum = table.get_active_player()
-                totals[f"Player{playernum + 1}"] = player.get_total()
+                totals[f"Player{playernum + 1}"] = [player.get_total(), player.get_bet()]
                 table.next_player()
 
             totals["Dealer"] = table.get_dealer().hand.total
@@ -229,9 +254,17 @@ while (running):
                 i = 1
 
                 for key, val in totals.items():
-                    totals_text += f"{i}. {key}: {val} total card value\n"
+                    if "Player" in key:
+                        totals_text += f"{i}. {key}: {val[0]} total card value, ${val[1]} bet size\n"
+                    else:
+                        totals_text += f"{i}. {key}: {val} total card value\n"
+            
                     i += 1
 
                 console.print(totals_text)
+
+                # todo add pay-out
+                ## reipmplement gamelogger
+                
                 sys.exit()
 
