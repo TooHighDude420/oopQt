@@ -20,3 +20,6 @@ class Hand():
     def stand(self) -> None:
         self.__has_passed = True
         self.can_play = False
+
+    def get_num_cards(self) -> int:
+        return len(self.__cards)
