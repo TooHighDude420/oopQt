@@ -25,6 +25,9 @@ class Dealer():
     def deal(self, deck:Deck) -> Card:
         return deck.hit()
     
+    def get_num_cards(self) -> int:
+        return self.hand.get_num_cards()
+    
     def shuffle_deck(self, console: Console, deck: Deck) -> tuple[str, int]:
         shuffle = console.input("shuffle deck?, y/n\n")
         console.clear()
