@@ -11,21 +11,18 @@ class Player():
         self.__current_bet: int
         self.allowed_play:bool = True
 
-    def hit(self, card: Card) -> bool:
+    def hit(self, card: Card) -> None:
         self.__hands[0].hit(card)
 
-        if self.__hands[0].total > 21:
+        if not self.__hands[0].can_play:
             self.allowed_play = False
-            return True
-        
-        return False
 
     def stand(self) -> None:
         self.__hands[0].stand()
         self.allowed_play = False
 
     def get_total(self) -> int:
-        return self.__hands[0].total
+        return self.__hands[0].get_total()
     
     def get_num_cards(self) -> int:
         return self.__hands[0].get_num_cards()
@@ -46,14 +43,17 @@ class Player():
     def set_bet(self, amount: int):
         self.__current_bet = amount
 
-    def get_bet(self):
+    def get_bet(self) -> int:
         return self.__current_bet
 
     def det_action(self) -> str:
-        if self.__hands[0].total >= 18:
+        if self.__hands[0].get_total() >= 18:
             return 'STAND'
         else:
             return 'HIT'
+        
+    def get_passed(self) -> bool:
+        return self.__hands[0].get_passed()
 
-    def reset(self):
+    def reset(self) -> None:
         return NotImplementedError("reset is not implemented")
