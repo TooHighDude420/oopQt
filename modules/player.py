@@ -21,7 +21,13 @@ class Player():
         self.allowed_play = False
 
     def get_total(self) -> int:
-        return self.__hands[0].total
+        return self.__hands[0].get_total()
+    
+    def get_num_cards(self) -> int:
+        return self.__hands[0].get_num_cards()
+    
+    def update_chips(self, increment:int) -> None:
+        self.__chips = max(0, self.__chips + increment)
 
     def place_bets(self, amount:int):
         if amount > self.__chips:
