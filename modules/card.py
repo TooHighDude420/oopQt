@@ -29,3 +29,6 @@ class Card:
         
     def __str__(self) -> str:
         return f"{self.__value.name} of {self.__suit}"
+    
+    def get_value(self) -> str:
+        return self.__value.name.lower()

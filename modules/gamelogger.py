@@ -28,25 +28,8 @@ class EvaluationContent(TypedDict):
 LOGS_DIR = Path(__file__).parent.parent / "logs"
 
 class GameLogger:
-    def cal_gameid(self) -> int:
-        if not LOGS_DIR.exists():
-            LOGS_DIR.mkdir(parents=True, exist_ok=True)
-            id = 0
-        elif LOGS_DIR.exists():
-            id = 0
-            
-            for i in range(len(list(LOGS_DIR.iterdir()))):
-                id = i
-        
-        return id
-
-    def __init__(self, players: dict[str, Player]) -> None:
-        # self.datetime = datetime()
-        self.points:int = 0
-
-        self.__game_id:int = self.cal_gameid()
-        self.__players:dict[str, Player] = players
-        self.__current_log = LOGS_DIR / f"session_{datetime.datetime.now().strftime("%Y-%m-%d_%H-%M")}.json"
+    def __init__(self) -> None:
+        self.__current_log: Path = LOGS_DIR / f"session_{datetime.datetime.now().strftime("%Y-%m-%d_%H-%M")}.json"
 
         if not self.__current_log.exists():
             self.__log_content: LogContent = {
@@ -59,21 +42,16 @@ class GameLogger:
             with open(self.__current_log, mode='r') as log:
                 self.__log_content = json.loads(log.read())
 
-<<<<<<< Updated upstream
-    def log(self, player_name:str, action:str, hand_value:int, feedback:str | None = None, points: str | None = None) -> None:
-=======
-    def get_points(self) -> int:
+    def get_points(self):
         return self.__log_content["dealer_points"]
 
     def log(self, player_name:str, action:str, feedback:str, points: int) -> None:
->>>>>>> Stashed changes
         if points is not None:
             self.__log_content["dealer_points"] += points
 
         self.__log_content["action_log"].append({
             "time":datetime.datetime.now().time().strftime("%H:%M:%S"),
             "player_name":player_name,
-            "hand_value":hand_value,
             "feedback":feedback,
             "action":action
         })

@@ -1,31 +1,34 @@
 from .hand import Hand
 from .card import Card
 from .deck import Deck
+from .player import Player
+
+from rich.console import Console
 
 class Dealer():
     def __init__(self):
-        self.hand: Hand = Hand()
+        self.__hand: Hand = Hand()
+        self.__dealt_cards: int = 0
+        self.__dealt_index: int = 1
 
     def hit(self, card: Card) -> tuple[str, int] | None:
-        if self.hand.total > 17:
-            return ("wrong choise!\n if the dealer has 17 or higher they should stand", -1)
+        if self.__hand.get_total() > 17:
+            return ("[red]Wrong choice![/red] if the dealer has 17 or higher they should stand", -1)
+        elif self.__hand.get_total() > 21:
+            return ("[red]Wrong choice![/red] the dealer is bust", -1)
         else:
-            self.hand.hit(card)
-            return ("Good choise", 1)
+            self.__hand.hit(card)
             
-
     def stand(self) -> tuple[str, int]:
-        if self.hand.total < 17:
-            return ("wrong choise!\n if the dealer has 16 or lower they should stand", -1)
+        if self.__hand.get_total() < 17:
+            return ("[red]Wrong choice![/red] if the dealer has 16 or lower they should hit", -1)
         else:
-            self.hand.stand()
-            return ("Good choise", 1)
+            self.__hand.stand()
+            return ("[green]Good choice![/green]", 1)
 
     def deal(self, deck:Deck) -> Card:
         return deck.hit()
     
-<<<<<<< Updated upstream
-=======
     def get_num_cards(self) -> int:
         return self.__hand.get_num_cards()
     
@@ -150,7 +153,7 @@ class Dealer():
 
         return (feedback, sellist)
 
-    def player_turn(self, input: int, action: str) -> tuple[str, int]:
+    def player_turn(self, input: int, action: str, player: Player):
         match input:
             case 1:
                 if action == "HIT":
@@ -170,6 +173,8 @@ class Dealer():
 
                 return feedback
 
->>>>>>> Stashed changes
+    # todo add pay-out
+    ## reipmplement gamelogger
+
     def reset():
         pass
