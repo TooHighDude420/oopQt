@@ -1,11 +1,10 @@
-# TODO:
-## UI:
-- [x] make Main_Menu widget
-- [x] reusable button registering function
-- [] make play_window widget
+feedback on end
+    [x] keep track of possible total
+    [x] compare earned points to possible total
+    [x] give grading based on earned and total
 
-- [inf] static ui quality of life module for reusable ui functions
+[x] reimplement gamelogger
+    [x] make sure everything returns their feedback
+    [x] wire in gamelogger in table
 
-
-## Designs:
-- [] design maken voor US3 en US4
+pay-outs
