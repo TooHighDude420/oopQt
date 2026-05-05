@@ -22,7 +22,7 @@ class Values(Enum):
     King = auto()
 
 class Card:
-    def __init__(self, suit:Suits, value:Values):
+    def __init__(self, suit:Suits, value:Values) -> None:
         self.__suit: Suits = suit
         self.__value: Values = value
         self.value: int = value.value

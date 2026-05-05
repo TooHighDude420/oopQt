@@ -4,7 +4,8 @@ from random import shuffle
 class Deck():
     def __init__(self):
         self.__cards: list[Card] = [] 
-        
+        self.cards_left: int = 0
+
         for s in Suits:
             for v in Values:
                 self.__cards.append(Card(s, v))

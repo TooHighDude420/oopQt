@@ -2,13 +2,7 @@ import json
 import datetime
 
 from pathlib import Path
-from typing import TYPE_CHECKING
 from typing import TypedDict
-
-
-# for type hinting
-if TYPE_CHECKING:
-    from .player import Player
 
 class ActionLog(TypedDict):
     time:str
@@ -58,16 +52,21 @@ class GameLogger:
             self.__log_content: LogContent = {
                 "date": datetime.datetime.now().date().isoformat(),
                 "dealer_points":0,
-                "action_log":[
-
-                ]
+                "action_log":[]
             }
 
         else:
             with open(self.__current_log, mode='r') as log:
                 self.__log_content = json.loads(log.read())
 
+<<<<<<< Updated upstream
     def log(self, player_name:str, action:str, hand_value:int, feedback:str | None = None, points: str | None = None) -> None:
+=======
+    def get_points(self) -> int:
+        return self.__log_content["dealer_points"]
+
+    def log(self, player_name:str, action:str, feedback:str, points: int) -> None:
+>>>>>>> Stashed changes
         if points is not None:
             self.__log_content["dealer_points"] += points
 
