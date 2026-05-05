@@ -1,30 +1,13 @@
 # main imports
-from enum import Enum, auto
-from modules.dealer import Dealer
-from modules.player import Player
-from modules.deck import Deck
-from modules.main_window import MainWindow
-from modules.gamelogger import GameLogger
-from modules.table import Table, actions, gamestate
-
-# nicer console
-from rich.console import Console
-
-# array comparison
-import numpy as np
-
 import time
-import sys
 
+from rich.console import Console
+from modules.table import Table, gamestate
 
 running = True
-
-# main_window = MainWindow()
-# game_logger = GameLogger(players)
 console = Console(color_system='truecolor')
-table = Table(0, 3, console)
+table = Table(3, console)
 
-# will be added to game window later
 while (running):
     match table.get_gamestate():
         case gamestate.GAME_START:
